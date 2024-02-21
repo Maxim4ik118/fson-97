@@ -1,6 +1,6 @@
-import ProductCard from "./components/ProductCard";
 import MailBox from "./components/MailBox";
-import "./App.css";
+
+import ProductGallery from "./components/ProductGallery/ProductGallery";
 // import iconReact from "./assets/react.svg";
 
 const productData = [
@@ -9,6 +9,7 @@ const productData = [
     productName: "Taco Black",
     img: "https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?dpr=2&h=480&w=640",
     price: 10.99,
+    quantity: 2,
     hasDiscount: true,
     description:
       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat, reprehenderit?",
@@ -18,6 +19,7 @@ const productData = [
     productName: "Big Mak",
     img: "https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?dpr=2&h=480&w=640",
     price: 6.25,
+    quantity: 7,
     hasDiscount: false,
     description:
       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat, reprehenderit?",
@@ -27,6 +29,17 @@ const productData = [
     productName: "Taco S",
     img: "https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?dpr=2&h=480&w=640",
     price: 3.99,
+    quantity: 2,
+    hasDiscount: false,
+    description:
+      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat, reprehenderit?",
+  },
+  {
+    id: "3_product",
+    productName: "Taco S",
+    img: "https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?dpr=2&h=480&w=640",
+    price: 3.99,
+    quantity: 1,
     hasDiscount: false,
     description:
       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat, reprehenderit?",
@@ -37,26 +50,8 @@ function App() {
   return (
     <div>
       <MailBox />
-      {productData.map((item) => {
-        return (
-          <ProductCard
-            key={item.id}
-            productName={item.productName}
-            img={item.img}
-            price={item.price}
-            hasDiscount={item.hasDiscount}
-            description={item.description}
-          />
-        );
-      })}
-      {/* 
-      <ProductCard
-        productName="Taco Black"
-        img="https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?dpr=2&h=480&w=640"
-        price={10.99}
-        hasDiscount={true}
-        description="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat, reprehenderit?"
-      /> */}
+
+      <ProductGallery productData={productData} />
     </div>
   );
 }
