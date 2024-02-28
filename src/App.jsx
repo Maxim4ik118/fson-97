@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MailBox from "./components/MailBox";
 
 import ProductGallery from "./components/ProductGallery/ProductGallery";
@@ -45,11 +45,20 @@ const emailsData = [
 
 function App() {
   const [counter, setCounter] = useState(0);
-  const [emails, setEmails] = useState(emailsData);
+  const [emails, setEmails] = useState(() => {
+    const stringifiedEmails = localStorage.getItem("emails");
+    if (!stringifiedEmails) return emailsData;
+
+    const parsedEmails = JSON.parse(stringifiedEmails);
+    return parsedEmails;
+  });
   const [showMailBox, setShowMailBox] = useState(false);
 
+  useEffect(() => {
+    localStorage.setItem("emails", JSON.stringify(emails));
+  }, [emails]);
+
   const onLogEmail = () => {
-    console.log("Email was sent");
     setCounter((prevState) => prevState + 1);
 
     // setCounter(counter + 1) ❌
@@ -58,12 +67,11 @@ function App() {
 
   const handleDelete = (mailId) => {
     setEmails((prevState) => prevState.filter((email) => email.id !== mailId));
-    // mailId = 3
-    // [{id: 1}, {id: 2}, {id: 3}]
-    // [{id: 1}, ] 1 !== 3 // true
-    // [{id: 1}, {id: 2}] 2 !== 3 // true
-    // [{id: 1}, {id: 2}] 3 !== 3 // false
   };
+
+  // const handleAddEmail = (mail = { id: "123", email: "Hello@gmail.com" }) => {
+  //   setEmails((prevState) => [...prevState, mail]);
+  // };
 
   const handleToggleMailBox = () => {
     setShowMailBox((prevState) => !prevState);
@@ -79,6 +87,7 @@ function App() {
       {showMailBox ? (
         <MailBox
           emails={emails}
+          onClose={handleToggleMailBox}
           emailCounter={counter}
           onLogEmail={onLogEmail}
           onDeleteEmail={handleDelete}

@@ -1,8 +1,48 @@
-const MailBox = ({ emails, onLogEmail, onDeleteEmail, emailCounter }) => {
+import { useEffect } from "react";
+
+/* 
+ Реакція на монтування компоненти:
+  1. Надсилати мережеві запити, коли компонента відмалювалася.
+  2. Вішати глобальні слухачі події(addEventListener) та setTimeout|setInterval.
+  3. Зчитати, а краще синхронізувати дані з localStorage.
+
+ Реакція на ДЕмонтування компоненти(clean up function):
+  1. Відхиляються мережеві запити, перед тим, як компонента зникне.
+  2. Прибираються глобальні слухачі події(removeEventListener) та clearTimeout|clearInterval.
+ 
+ Реакція на оновлення компоненти(синхронізація):
+  1. Надсилаються мережеві запити з актуальними данними.
+  2. Синхронізуються дані з localStorage.
+
+
+*/
+
+const MailBox = ({
+  emails,
+  onClose,
+  onLogEmail,
+  onDeleteEmail,
+  emailCounter,
+}) => {
+  useEffect(() => {
+    const onKeyDown = (event) => {
+      if (event.code === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [onClose]);
+
   return (
     <div>
       <h2>
-        MailBox <b>{emailCounter}</b>
+        MailBox <b>{emailCounter}</b>{" "}
+        <button onClick={onClose}>Close Mailbox</button>
       </h2>
       <ul>
         {emails.map((email) => (
