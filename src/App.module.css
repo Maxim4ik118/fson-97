@@ -1,0 +1,6 @@
+.cardGrid {
+  display: grid;
+  place-content: center;
+  gap: 20px;
+  grid-template-columns: repeat(4, minmax(150px, 350px));
+}
