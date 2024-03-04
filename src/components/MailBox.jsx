@@ -17,13 +17,7 @@ import { useEffect } from "react";
 
 */
 
-const MailBox = ({
-  emails,
-  onClose,
-  onLogEmail,
-  onDeleteEmail,
-  emailCounter,
-}) => {
+const MailBox = ({ emails, onClose, onDeleteEmail }) => {
   useEffect(() => {
     const onKeyDown = (event) => {
       if (event.code === "Escape") {
@@ -41,13 +35,17 @@ const MailBox = ({
   return (
     <div>
       <h2>
-        MailBox <b>{emailCounter}</b>{" "}
         <button onClick={onClose}>Close Mailbox</button>
       </h2>
       <ul>
         {emails.map((email) => (
           <li key={email.id}>
-            {email.email}{" "}
+            <p>
+              User name: <b>{email.userName}</b>
+            </p>
+            <p>
+              Email: <b>{email.email}</b>
+            </p>
             <button onClick={() => onDeleteEmail(email.id)}>&times;</button>
           </li>
         ))}
@@ -61,9 +59,7 @@ const MailBox = ({
           Mail 3 <button onClick={() => onDeleteEmail(3)}>&times;</button>
         </li> */}
       </ul>
-      <button onClick={onLogEmail} type="button">
-        Send mail
-      </button>
+      <button type="button">Send mail</button>
     </div>
   );
 };

@@ -1,0 +1,37 @@
+.form {
+  border: 1px solid black;
+  padding: 30px;
+  margin: 0 auto;
+  max-width: 320px;
+  width: 100%;
+  border-radius: 10px;
+}
+.formTitle {
+  margin: 0 0 15px;
+  font-family: sans-serif;
+}
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.labelText {
+  font-family: sans-serif;
+  font-size: 14px;
+}
+.formInput {
+  padding: 8px 15px;
+}
+.submitBtn {
+  display: flex;
+  margin-left: auto;
+  background-color: yellow;
+  padding: 12px 15px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: 1px solid blue;
+  border-radius: 8px;
+  color: blue;
+}
