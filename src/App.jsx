@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { nanoid } from "nanoid";
 
-import MailBox from "./components/MailBox";
+import MailBox from "./components/MailBox/MailBox";
 import MailBoxForm from "./components/MailBoxForm/MailBoxForm";
 // import iconReact from "./assets/react.svg";
 
@@ -39,9 +39,27 @@ import MailBoxForm from "./components/MailBoxForm/MailBoxForm";
 // ];
 
 const emailsData = [
-  { id: "1", email: "foo@bar.com", userName: "Arab" },
-  { id: "2", email: "alex1336@bar.com", userName: "Alex" },
-  { id: "3", email: "maxIm0981@gmail.com", userName: "Kiril" },
+  {
+    id: "1",
+    email: "foo@bar.com",
+    userName: "Arab",
+    preferredColor: null,
+    subscription: "standart",
+  },
+  {
+    id: "2",
+    email: "alex1336@bar.com",
+    userName: "Alex",
+    preferredColor: null,
+    subscription: "premium",
+  },
+  {
+    id: "3",
+    email: "maxIm0981@gmail.com",
+    userName: "Kiril",
+    preferredColor: null,
+    subscription: "vip",
+  },
 ];
 
 function App() {
