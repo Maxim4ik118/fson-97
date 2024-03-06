@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 
+import css from "./MailBox.module.css";
+
 /* 
  Реакція на монтування компоненти:
   1. Надсилати мережеві запити, коли компонента відмалювалася.
@@ -38,26 +40,36 @@ const MailBox = ({ emails, onClose, onDeleteEmail }) => {
         <button onClick={onClose}>Close Mailbox</button>
       </h2>
       <ul>
-        {emails.map((email) => (
-          <li key={email.id}>
-            <p>
-              User name: <b>{email.userName}</b>
-            </p>
-            <p>
-              Email: <b>{email.email}</b>
-            </p>
-            <button onClick={() => onDeleteEmail(email.id)}>&times;</button>
-          </li>
-        ))}
-        {/* <li>
-          Mail 1 <button onClick={() => onDeleteEmail(1)}>&times;</button>
-        </li>
-        <li>
-          Mail 2 <button onClick={() => onDeleteEmail(2)}>&times;</button>
-        </li>
-        <li>
-          Mail 3 <button onClick={() => onDeleteEmail(3)}>&times;</button>
-        </li> */}
+        {emails.map((email) => {
+          const userBackgroundColor =
+            email.preferredColor !== null ? email.preferredColor : "grey";
+
+          return (
+            <li className={css.listItem} key={email.id}>
+              <p>
+                User name:{" "}
+                <span
+                  style={{
+                    backgroundColor: userBackgroundColor,
+                  }}
+                  className={css.listItemColor}
+                />
+                <b>{email.userName}</b>
+              </p>
+              <p>
+                Email: <b>{email.email}</b>
+              </p>
+              <p>
+                <b>
+                  Current subscription plan is {'"'}
+                  {email.subscription}
+                  {'"'}
+                </b>
+              </p>
+              <button onClick={() => onDeleteEmail(email.id)}>&times;</button>
+            </li>
+          );
+        })}
       </ul>
       <button type="button">Send mail</button>
     </div>

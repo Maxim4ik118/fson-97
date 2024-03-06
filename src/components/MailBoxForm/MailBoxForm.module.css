@@ -35,3 +35,11 @@
   border-radius: 8px;
   color: blue;
 }
+.errorMsg {
+  padding: 5px 15px;
+  display: block;
+  font-size: 12px;
+  background-color: orange;
+  color: black;
+  border-radius: 8px;
+}
