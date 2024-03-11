@@ -110,6 +110,7 @@ const MailBoxForm = ({ onAddNewMailBox }) => {
         <label>
           <span className={css.labelText}>Select user subscription:</span>
           <Field as="select" name="subscription">
+            <option value="" disabled>Premium++</option>
             <option value="standart">Standart</option>
             <option value="vip">VIP</option>
             <option value="premium">Premium</option>
