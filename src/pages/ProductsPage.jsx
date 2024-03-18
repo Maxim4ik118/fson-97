@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
-import Loader from "./components/Loader/Loader";
-import ProductList from "./components/ProductList/ProductList";
-import { requestProducts, requestProductsByQuery } from "./services/api";
-import SearchForm from "./components/SearchForm/SearchForm";
+import ErrorMessage from "../components/ErrorMessage/ErrorMessage";
+import Loader from "../components/Loader/Loader";
+import ProductList from "../components/ProductList/ProductList";
+import { requestProducts, requestProductsByQuery } from "../services/api";
+import SearchForm from "../components/SearchForm/SearchForm";
 
-const AppModule4 = () => {
+const ProductsPage = () => {
   const [products, setProducts] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -63,4 +63,4 @@ const AppModule4 = () => {
   );
 };
 
-export default AppModule4;
+export default ProductsPage;

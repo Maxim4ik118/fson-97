@@ -11,3 +11,10 @@ export const requestProductsByQuery = async (query) => {
   );
   return data;
 };
+
+export const requestProductsById = async (productId) => {
+  const { data } = await axios.get(
+    `https://dummyjson.com/products/${productId}`
+  );
+  return data;
+};
