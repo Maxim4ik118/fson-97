@@ -4,3 +4,25 @@
   gap: 20px;
   grid-template-columns: repeat(4, minmax(150px, 350px));
 }
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid black;
+  gap: 10px;
+}
+.headerLink {
+  display: flex;
+  padding: 15px 25px;
+  text-decoration: none;
+  color: black;
+  background-color: transparent;
+  border: 1px solid black;
+  border-radius: 8px;
+  transition: all .3s;
+}
+.active {
+  color: white;
+  background-color: black;
+}
