@@ -1,15 +1,20 @@
-import { useEffect, useState } from "react";
-import { Link, Route, Routes, useParams } from "react-router-dom";
+import { Suspense, lazy, useEffect, useRef, useState } from "react";
+import { Link, Route, Routes, useLocation, useParams } from "react-router-dom";
 import { requestProductsById } from "../services/api";
 import { ErrorMessage } from "formik";
 import Loader from "../components/Loader/Loader";
-import ProductComments from "../components/ProductComments/ProductComments";
+// import ProductComments from "../components/ProductComments/ProductComments";
+const ProductComments = lazy(() =>
+  import("../components/ProductComments/ProductComments")
+);
 
 const ProductDetailsPage = () => {
   const { productId } = useParams(); // Get the product ID from the URL parameter.
   const [productData, setProductData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const location = useLocation();
+  const backLinkRef = useRef(location.state ?? "/search");
 
   useEffect(() => {
     async function fetchData() {
@@ -34,6 +39,7 @@ const ProductDetailsPage = () => {
       {isLoading && <Loader />}
       {productData !== null && (
         <div>
+          <Link to={backLinkRef.current}>Go back</Link>
           <h1>{productData.title}</h1>
           <p>{productData.description}</p>
           <p>Price: ${productData.price}</p>
@@ -52,9 +58,11 @@ const ProductDetailsPage = () => {
       <div>
         <Link to="comments">Comments</Link>
       </div>
-      <Routes>
-        <Route path="comments" element={<ProductComments />} />
-      </Routes>
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route path="comments" element={<ProductComments />} />
+        </Routes>
+      </Suspense>
     </div>
   );
 };
