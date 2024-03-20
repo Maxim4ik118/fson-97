@@ -1,6 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const ProductList = ({ products = null }) => {
+  const location = useLocation();
+
   return (
     <ul>
       {products !== null &&
@@ -15,7 +17,9 @@ const ProductList = ({ products = null }) => {
                 <span>Brand: {product.brand}</span>
                 <span>Price: ${product.price}</span>
               </div>
-              <Link to={`/products/${product.id}`}>See the details</Link>
+              <Link state={location} to={`/products/${product.id}`}>
+                See the details
+              </Link>
             </li>
           );
         })}

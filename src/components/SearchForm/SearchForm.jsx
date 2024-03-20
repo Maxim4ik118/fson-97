@@ -1,9 +1,9 @@
 import { Field, Form, Formik } from "formik";
 
-const SearchForm = ({ onSetSearchQuery }) => {
+const SearchForm = ({ onSetSearchQuery, searchQuery }) => {
   return (
     <Formik
-      initialValues={{ query: "" }}
+      initialValues={{ query: searchQuery ?? "" }}
       onSubmit={(values) => {
         onSetSearchQuery(values.query);
       }}
