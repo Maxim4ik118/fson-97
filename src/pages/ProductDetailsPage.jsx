@@ -1,4 +1,5 @@
-import { Suspense, lazy, useEffect, useRef, useState } from "react";
+import { Suspense, lazy, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, Route, Routes, useLocation, useParams } from "react-router-dom";
 import { requestProductsById } from "../services/api";
 import { ErrorMessage } from "formik";
@@ -8,30 +9,77 @@ const ProductComments = lazy(() =>
   import("../components/ProductComments/ProductComments")
 );
 
+/*
+Алгоритм роботи з Редакс:
+1. Встановлення.
+2. Налаштовуємо стор -> в src створити папку redux/store.js
+3. Підключимо інструменти розробника reduxDevtools
+4. Підключити стор до App.jsx
+5. Підготувати прототип функції редьюсер та продумати початковий стан.
+6. Підключити редьюсер до combineReducers.
+7. Витягнути дані в компоненті зі стору за допомогою useSelector.
+8. Описати логіку редьюсеру.
+9. Постворювати actions -> об`єкти інструкцій ({
+          type: "details/setIsLoading",
+          payload: true,
+    })
+10.Отримати dispatch за допомогою хука useDispatch і задіспатчити action -> dispatch(action)
+
+Store -> це глобальне сховище даних. Наше джерело істини.
+
+Reducer -> це чиста функція, яка приймає два аргумети state 
+           та action та повертає змінений, або незмінений стейт.(Дані в середині 
+           функцію змінюються іммутабельно).
+
+Action -> це об'єкт, в якого обов'язково має бути поле type, також може
+           бути поле payload -> { type: "some/typename", payload?: someData }
+
+Quick Console log -> CTRL/CMD + SHIFT + L
+*/
+
 const ProductDetailsPage = () => {
   const { productId } = useParams(); // Get the product ID from the URL parameter.
-  const [productData, setProductData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
+
+  const dispatch = useDispatch();
+  const productData = useSelector((state) => state.productDetails.productData);
+  const isLoading = useSelector((state) => state.productDetails.isLoading);
+  const isError = useSelector((state) => state.productDetails.isError);
+
   const location = useLocation();
   const backLinkRef = useRef(location.state ?? "/search");
 
   useEffect(() => {
     async function fetchData() {
       try {
-        setIsLoading(true);
+        const loadingEnableAction = {
+          type: "details/setIsLoading",
+          payload: true,
+        };
+        dispatch(loadingEnableAction);
         const data = await requestProductsById(productId);
 
-        setProductData(data);
+        const setProductDataAction = {
+          type: "details/setProductData",
+          payload: data,
+        };
+        dispatch(setProductDataAction);
       } catch (err) {
-        setIsError(true);
+        const setErrorAction = {
+          type: "details/setIsError",
+          payload: true,
+        };
+        dispatch(setErrorAction);
       } finally {
-        setIsLoading(false);
+        const loadingDisableAction = {
+          type: "details/setIsLoading",
+          payload: false,
+        };
+        dispatch(loadingDisableAction);
       }
     }
 
     fetchData();
-  }, [productId]);
+  }, [productId, dispatch]);
 
   return (
     <div>
