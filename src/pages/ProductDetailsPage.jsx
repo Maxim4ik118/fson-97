@@ -4,6 +4,8 @@ import { Link, Route, Routes, useLocation, useParams } from "react-router-dom";
 import { requestProductsById } from "../services/api";
 import { ErrorMessage } from "formik";
 import Loader from "../components/Loader/Loader";
+import { setIsError, setIsLoading, setProductData } from "../redux/productDetailReducer";
+import ReduxCounter from "../components/ReduxCounter/ReduxCounter";
 // import ProductComments from "../components/ProductComments/ProductComments";
 const ProductComments = lazy(() =>
   import("../components/ProductComments/ProductComments")
@@ -34,6 +36,10 @@ Reducer -> це чиста функція, яка приймає два аргу
 Action -> це об'єкт, в якого обов'язково має бути поле type, також може
            бути поле payload -> { type: "some/typename", payload?: someData }
 
+Action Creator -> це функція, яка може приймати поле payload і завжди повертає
+                  об'єкт action'a.
+
+
 Quick Console log -> CTRL/CMD + SHIFT + L
 */
 
@@ -51,30 +57,14 @@ const ProductDetailsPage = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const loadingEnableAction = {
-          type: "details/setIsLoading",
-          payload: true,
-        };
-        dispatch(loadingEnableAction);
+        dispatch(setIsLoading(true));
         const data = await requestProductsById(productId);
 
-        const setProductDataAction = {
-          type: "details/setProductData",
-          payload: data,
-        };
-        dispatch(setProductDataAction);
+        dispatch(setProductData(data));
       } catch (err) {
-        const setErrorAction = {
-          type: "details/setIsError",
-          payload: true,
-        };
-        dispatch(setErrorAction);
+        dispatch(setIsError(true));
       } finally {
-        const loadingDisableAction = {
-          type: "details/setIsLoading",
-          payload: false,
-        };
-        dispatch(loadingDisableAction);
+        dispatch(setIsLoading(false));
       }
     }
 
@@ -83,6 +73,7 @@ const ProductDetailsPage = () => {
 
   return (
     <div>
+      <ReduxCounter />
       {isError && <ErrorMessage />}
       {isLoading && <Loader />}
       {productData !== null && (
