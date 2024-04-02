@@ -1,11 +1,13 @@
 import { Suspense, lazy, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Route, Routes, useLocation, useParams } from "react-router-dom";
-import { requestProductsById } from "../services/api";
-import { ErrorMessage } from "formik";
 import Loader from "../components/Loader/Loader";
-import { setIsError, setIsLoading, setProductData } from "../redux/productDetailReducer";
+import {
+  apiGetProductDetails,
+} from "../redux/productDetailReducer";
 import ReduxCounter from "../components/ReduxCounter/ReduxCounter";
+import ProductInfo from "../components/ProductInfo/ProductInfo";
+import ErrorMessage from "../components/ErrorMessage/ErrorMessage";
 // import ProductComments from "../components/ProductComments/ProductComments";
 const ProductComments = lazy(() =>
   import("../components/ProductComments/ProductComments")
@@ -39,14 +41,14 @@ Action -> це об'єкт, в якого обов'язково має бути 
 Action Creator -> це функція, яка може приймати поле payload і завжди повертає
                   об'єкт action'a.
 
-
+Thunk -> Асинхронний генератор екшенів -> Асинхронна операція -> Редакс Cанка
 Quick Console log -> CTRL/CMD + SHIFT + L
 */
 
 const ProductDetailsPage = () => {
+  const dispatch = useDispatch();
   const { productId } = useParams(); // Get the product ID from the URL parameter.
 
-  const dispatch = useDispatch();
   const productData = useSelector((state) => state.productDetails.productData);
   const isLoading = useSelector((state) => state.productDetails.isLoading);
   const isError = useSelector((state) => state.productDetails.isError);
@@ -55,20 +57,7 @@ const ProductDetailsPage = () => {
   const backLinkRef = useRef(location.state ?? "/search");
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        dispatch(setIsLoading(true));
-        const data = await requestProductsById(productId);
-
-        dispatch(setProductData(data));
-      } catch (err) {
-        dispatch(setIsError(true));
-      } finally {
-        dispatch(setIsLoading(false));
-      }
-    }
-
-    fetchData();
+    dispatch(apiGetProductDetails(productId));
   }, [productId, dispatch]);
 
   return (
@@ -77,22 +66,7 @@ const ProductDetailsPage = () => {
       {isError && <ErrorMessage />}
       {isLoading && <Loader />}
       {productData !== null && (
-        <div>
-          <Link to={backLinkRef.current}>Go back</Link>
-          <h1>{productData.title}</h1>
-          <p>{productData.description}</p>
-          <p>Price: ${productData.price}</p>
-          <p>Brand: {productData.brand}</p>
-          <p>Rating: {productData.rating}</p>
-
-          <ul>
-            {productData.images.map((imageSrc) => (
-              <li key={imageSrc}>
-                <img width={150} src={imageSrc} alt={productData.title} />
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ProductInfo refValue={backLinkRef.current} productData={productData} />
       )}
       <div>
         <Link to="comments">Comments</Link>

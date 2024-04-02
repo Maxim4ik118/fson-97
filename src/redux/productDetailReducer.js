@@ -1,11 +1,23 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { requestProductsById } from "../services/api";
+
+export const apiGetProductDetails = createAsyncThunk(
+  "productDetails/get",
+  async (productId, thunkAPI) => {
+    try {
+      const data = await requestProductsById(productId);
+      return data; // Це значення буде записане в action.payload
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.message); // Це значення буде записане в action.payload
+    }
+  }
+);
 
 const INITIAL_STATE = {
   productData: null,
   isLoading: false,
   isError: false,
   counter: 0,
-  contacts: [], // to homework example
 };
 
 const productDetailsSlice = createSlice({
@@ -21,24 +33,22 @@ const productDetailsSlice = createSlice({
     decrementCounter(state) {
       state.counter = state.counter - 1;
     },
-    setProductData(state, action) {
-      state.productData = action.payload;
-    },
-    setIsLoading(state, action) {
-      state.isLoading = action.payload;
-    },
-    setIsError(state, action) {
-      state.isError = action.payload;
-    },
-    addContact(state, action) {
-      state.contacts.push(action.payload); // 1
-    },
-    deleteContact(state, action) {
-      state.contacts = state.contacts.filter(
-        (contact) => contact.id !== action.payload
-      );
-    },
   },
+  // Об'єкт редюсерів для асинхронних генераторів екшенів
+  extraReducers: (builder) =>
+    builder
+      .addCase(apiGetProductDetails.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+      })
+      .addCase(apiGetProductDetails.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.productData = action.payload; //
+      })
+      .addCase(apiGetProductDetails.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+      }),
 });
 
 // Генератори Action Creator
@@ -54,59 +64,3 @@ export const {
 
 // Редюсер слайсу
 export const productDetailsReducer = productDetailsSlice.reducer;
-
-// INITIAL_STATE.isError = false; -> mutable change ❌
-
-// const NEW_STATE = { -> immutable change ✅
-//     ...INITIAL_STATE,
-//     isError: false
-// }
-
-// export const productDetailsReducer = (state = INITIAL_STATE, action) => {
-//   switch (action.type) {
-//     case "details/setProductData": {
-//       return { ...state, productData: action.payload };
-//     }
-//     case "details/setIsLoading": {
-//       return { ...state, isLoading: action.payload };
-//     }
-//     case "details/setIsError": {
-//       return { ...state, isError: action.payload };
-//     }
-//     case "contacts/addContact": {
-//       return { ...state, contacts: [...state.contacts, action.payload] };
-//     }
-//     case "contacts/deleteContact": {
-//       return {
-//         ...state,
-//         contacts: state.contacts.filter(
-//           (contact) => contact.id !== action.payload
-//         ),
-//       };
-//     }
-
-//     default:
-//       return state;
-//   }
-// };
-
-// export const setIsLoadingAC = (payload) => {
-//   return {
-//     type: "details/setIsLoading",
-//     payload,
-//   };
-// };
-
-// export const setPoductDataAC = (payload) => {
-//   return {
-//     type: "details/setProductData",
-//     payload,
-//   };
-// };
-
-// export const setErrorAC = (payload) => {
-//   return {
-//     type: "details/setIsError",
-//     payload,
-//   };
-// };

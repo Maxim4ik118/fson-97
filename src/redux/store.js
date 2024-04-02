@@ -12,17 +12,18 @@ import {
 import storage from "redux-persist/lib/storage";
 
 import { productDetailsReducer } from "./productDetailReducer";
+import { productsReducer } from "./productsReducer";
 
 const productDetailsConfig = {
   key: "productDetails",
   storage,
   whitelist: ["counter"],
-//   blacklist: ['contacts', "isError", "isLoading", "productData"],
 };
 
 export const store = configureStore({
   reducer: {
     productDetails: persistReducer(productDetailsConfig, productDetailsReducer),
+    productsData: productsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

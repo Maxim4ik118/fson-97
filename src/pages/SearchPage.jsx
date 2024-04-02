@@ -1,37 +1,26 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import ErrorMessage from "../components/ErrorMessage/ErrorMessage";
 import Loader from "../components/Loader/Loader";
 import ProductList from "../components/ProductList/ProductList";
-import { requestProductsByQuery } from "../services/api";
 import SearchForm from "../components/SearchForm/SearchForm";
 import { useSearchParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { apiGetProductsByQuery } from "../redux/productsReducer";
 
 const SearchPage = () => {
-  const [products, setProducts] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  //   const [searchQuery, setSearchQuery] = useState(null);
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.productsData.products);
+  const isLoading = useSelector((state) => state.productsData.isLoading);
+  const isError = useSelector((state) => state.productsData.isError);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("query");
 
   useEffect(() => {
     if (searchQuery === null) return;
 
-    async function fetchDataByQuery() {
-      try {
-        setIsLoading(true);
-        const data = await requestProductsByQuery(searchQuery);
-
-        setProducts(data.products);
-      } catch (err) {
-        setIsError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchDataByQuery();
-  }, [searchQuery]);
+    dispatch(apiGetProductsByQuery(searchQuery));
+  }, [searchQuery, dispatch]);
 
   const onSetSearchQuery = (searchTerm) => {
     // setSearchQuery(query);
