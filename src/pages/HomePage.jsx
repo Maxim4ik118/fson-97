@@ -1,9 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { nanoid } from "nanoid";
 
 import MailBox from "../components/MailBox/MailBox";
 import MailBoxForm from "../components/MailBoxForm/MailBoxForm";
-
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addEmail,
+  deleteEmail,
+  selectEmailFilter,
+  selectEmails,
+  selectFilteredEmails,
+  selectShowMailBox,
+  setFilter,
+  toggleMailBox,
+} from "../redux/emailsReducer";
 
 const emailsData = [
   {
@@ -30,25 +40,22 @@ const emailsData = [
 ];
 
 function HomePage() {
-  const [emails, setEmails] = useState(() => {
-    const stringifiedEmails = localStorage.getItem("emails");
-    if (!stringifiedEmails) return emailsData;
+  const dispatch = useDispatch();
+  // const emails = useSelector(selectEmails);
+  const showMailBox = useSelector(selectShowMailBox);
+  const filter = useSelector(selectEmailFilter);
+  const filteredEmails = useSelector(selectFilteredEmails)
 
-    const parsedEmails = JSON.parse(stringifiedEmails);
-    return parsedEmails;
-  });
-  const [showMailBox, setShowMailBox] = useState(false);
-
-  useEffect(() => {
-    localStorage.setItem("emails", JSON.stringify(emails));
-  }, [emails]);
+  const onFilter = (e) => {
+    dispatch(setFilter(e.target.value));
+  };
 
   const handleDelete = (mailId) => {
-    setEmails((prevState) => prevState.filter((email) => email.id !== mailId));
+    dispatch(deleteEmail(mailId)); // -> {type: "deleteEmail", payload: mailId}
   };
 
   const handleToggleMailBox = () => {
-    setShowMailBox((prevState) => !prevState);
+    dispatch(toggleMailBox());
   };
 
   const onAddNewMailBox = (mailData) => {
@@ -56,9 +63,19 @@ function HomePage() {
       ...mailData,
       id: nanoid(),
     };
-    // setEmails([...emails, finalMail]); ❌
-    setEmails((prevState) => [...prevState, finalMail]); // ✅
+    dispatch(addEmail(finalMail));
   };
+
+  // АНАЛОГІЧНИЙ ВАРІАНТ ДО createSelector
+  // const filteredEmails = useMemo(
+  //   () =>
+  //     emails.filter(
+  //       (email) =>
+  //         email.email.toLowerCase().includes(filter.trim().toLowerCase()) ||
+  //         email.userName.toLowerCase().includes(filter.trim().toLowerCase())
+  //     ),
+  //   [emails, filter]
+  // );
 
   return (
     <div>
@@ -69,11 +86,14 @@ function HomePage() {
       </button>
 
       {showMailBox ? (
-        <MailBox
-          emails={emails}
-          onClose={handleToggleMailBox}
-          onDeleteEmail={handleDelete}
-        />
+        <div>
+          <input type="text" value={filter} onChange={onFilter} />
+          <MailBox
+            emails={filteredEmails}
+            onClose={handleToggleMailBox}
+            onDeleteEmail={handleDelete}
+          />
+        </div>
       ) : null}
     </div>
   );

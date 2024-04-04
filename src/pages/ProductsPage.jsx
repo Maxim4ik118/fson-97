@@ -26,7 +26,6 @@ const ProductsPage = () => {
     fetchData();
   }, []);
 
-
   return (
     <div>
       <h1>Phone Store</h1>

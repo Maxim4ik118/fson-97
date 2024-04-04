@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 
 import css from "./MailBox.module.css";
-import useFeedback from "../../hooks/useFeedback";
 
 /* 
  Реакція на монтування компоненти:
@@ -21,7 +20,6 @@ import useFeedback from "../../hooks/useFeedback";
 */
 
 const MailBox = ({ emails, onClose, onDeleteEmail }) => {
-  const { totalFeedback, feedback } = useFeedback();
   useEffect(() => {
     const onKeyDown = (event) => {
       if (event.code === "Escape") {
@@ -41,12 +39,6 @@ const MailBox = ({ emails, onClose, onDeleteEmail }) => {
       <h2>
         <button onClick={onClose}>Close Mailbox</button>
       </h2>
-      <ul>
-        <li>Good:{feedback.good} </li>
-        <li>Neutral: {feedback.neutral}</li>
-        <li>Bad: {feedback.bad}</li>
-      </ul>
-      <h2>Total feedback: {totalFeedback}</h2>
       <ul>
         {emails.map((email) => {
           const userBackgroundColor =
@@ -69,9 +61,8 @@ const MailBox = ({ emails, onClose, onDeleteEmail }) => {
               </p>
               <p>
                 <b>
-                  Current subscription plan is {'"'}
+                  Current subscription plan is
                   {email.subscription}
-                  {'"'}
                 </b>
               </p>
               <button onClick={() => onDeleteEmail(email.id)}>&times;</button>

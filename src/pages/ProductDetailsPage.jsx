@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, Route, Routes, useLocation, useParams } from "react-router-dom";
 import Loader from "../components/Loader/Loader";
 import {
-  apiGetProductDetails,
+  apiGetProductDetails, selectProductData, selectProductDetailsIsError, selectProductDetailsIsLoading,
 } from "../redux/productDetailReducer";
 import ReduxCounter from "../components/ReduxCounter/ReduxCounter";
 import ProductInfo from "../components/ProductInfo/ProductInfo";
@@ -49,9 +49,9 @@ const ProductDetailsPage = () => {
   const dispatch = useDispatch();
   const { productId } = useParams(); // Get the product ID from the URL parameter.
 
-  const productData = useSelector((state) => state.productDetails.productData);
-  const isLoading = useSelector((state) => state.productDetails.isLoading);
-  const isError = useSelector((state) => state.productDetails.isError);
+  const productData = useSelector(selectProductData);
+  const isLoading = useSelector(selectProductDetailsIsLoading);
+  const isError = useSelector(selectProductDetailsIsError);
 
   const location = useLocation();
   const backLinkRef = useRef(location.state ?? "/search");

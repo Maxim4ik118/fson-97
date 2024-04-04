@@ -5,13 +5,13 @@ import ProductList from "../components/ProductList/ProductList";
 import SearchForm from "../components/SearchForm/SearchForm";
 import { useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { apiGetProductsByQuery } from "../redux/productsReducer";
+import { apiGetProductsByQuery, selectProducts, selectProductsIsError, selectProductsIsLoading } from "../redux/productsReducer";
 
 const SearchPage = () => {
   const dispatch = useDispatch();
-  const products = useSelector((state) => state.productsData.products);
-  const isLoading = useSelector((state) => state.productsData.isLoading);
-  const isError = useSelector((state) => state.productsData.isError);
+  const products = useSelector(selectProducts);
+  const isLoading = useSelector(selectProductsIsLoading);
+  const isError = useSelector(selectProductsIsError);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("query");

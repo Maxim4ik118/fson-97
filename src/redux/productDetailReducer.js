@@ -52,15 +52,12 @@ const productDetailsSlice = createSlice({
 });
 
 // Генератори Action Creator
-export const {
-  incrementCounter,
-  decrementCounter,
-  setProductData,
-  setIsLoading,
-  setIsError,
-  addContact,
-  deleteContact,
-} = productDetailsSlice.actions;
+export const { incrementCounter, decrementCounter } =
+  productDetailsSlice.actions;
+
+export const selectProductData = (state) => state.productDetails.productData;
+export const selectProductDetailsIsLoading = (state) => state.productDetails.isLoading;
+export const selectProductDetailsIsError = (state) => state.productDetails.isError;
 
 // Редюсер слайсу
 export const productDetailsReducer = productDetailsSlice.reducer;

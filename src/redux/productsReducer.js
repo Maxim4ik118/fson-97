@@ -15,7 +15,7 @@ export const apiGetProductsByQuery = createAsyncThunk(
 );
 
 const INITIAL_STATE = {
-  products: null,
+  products: null, // [{id: 1, ...}, {id: 2, ...}]
   isLoading: false,
   isError: false,
 };
@@ -31,7 +31,7 @@ const productsSlice = createSlice({
       })
       .addCase(apiGetProductsByQuery.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.products = action.payload;
+        state.products = action.payload.products;
         // state.products.push(action.payload);
         // state.products = state.products.filter(product => product.id !== action.payload.id)
       })
@@ -40,5 +40,9 @@ const productsSlice = createSlice({
         state.isError = true;
       }),
 });
+
+export const selectProducts = (state) => state.productsData.products;
+export const selectProductsIsLoading = (state) => state.productsData.isLoading;
+export const selectProductsIsError = (state) => state.productsData.isError;
 
 export const productsReducer = productsSlice.reducer;

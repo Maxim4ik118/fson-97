@@ -13,6 +13,7 @@ import storage from "redux-persist/lib/storage";
 
 import { productDetailsReducer } from "./productDetailReducer";
 import { productsReducer } from "./productsReducer";
+import { emailsReducer } from "./emailsReducer";
 
 const productDetailsConfig = {
   key: "productDetails",
@@ -20,9 +21,16 @@ const productDetailsConfig = {
   whitelist: ["counter"],
 };
 
+const emailsConfig = {
+  key: "emails",
+  storage,
+  whitelist: ["emails"],
+};
+
 export const store = configureStore({
   reducer: {
     productDetails: persistReducer(productDetailsConfig, productDetailsReducer),
+    emails: persistReducer(emailsConfig, emailsReducer),
     productsData: productsReducer,
   },
   middleware: (getDefaultMiddleware) =>
