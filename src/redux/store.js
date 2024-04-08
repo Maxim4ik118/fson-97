@@ -14,6 +14,7 @@ import storage from "redux-persist/lib/storage";
 import { productDetailsReducer } from "./productDetailReducer";
 import { productsReducer } from "./productsReducer";
 import { emailsReducer } from "./emailsReducer";
+import { authReducer } from "./authReducer";
 
 const productDetailsConfig = {
   key: "productDetails",
@@ -27,11 +28,18 @@ const emailsConfig = {
   whitelist: ["emails"],
 };
 
+const authConfig = {
+  key: "auth",
+  storage,
+  whitelist: ["token"],
+};
+
 export const store = configureStore({
   reducer: {
     productDetails: persistReducer(productDetailsConfig, productDetailsReducer),
     emails: persistReducer(emailsConfig, emailsReducer),
     productsData: productsReducer,
+    auth: persistReducer(authConfig, authReducer),
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

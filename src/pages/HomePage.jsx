@@ -1,4 +1,3 @@
-import { useEffect, useMemo, useState } from "react";
 import { nanoid } from "nanoid";
 
 import MailBox from "../components/MailBox/MailBox";
@@ -8,36 +7,13 @@ import {
   addEmail,
   deleteEmail,
   selectEmailFilter,
-  selectEmails,
   selectFilteredEmails,
   selectShowMailBox,
   setFilter,
   toggleMailBox,
 } from "../redux/emailsReducer";
 
-const emailsData = [
-  {
-    id: "1",
-    email: "foo@bar.com",
-    userName: "Arab",
-    preferredColor: null,
-    subscription: "standart",
-  },
-  {
-    id: "2",
-    email: "alex1336@bar.com",
-    userName: "Alex",
-    preferredColor: null,
-    subscription: "premium",
-  },
-  {
-    id: "3",
-    email: "maxIm0981@gmail.com",
-    userName: "Kiril",
-    preferredColor: null,
-    subscription: "vip",
-  },
-];
+
 
 function HomePage() {
   const dispatch = useDispatch();
