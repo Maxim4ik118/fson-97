@@ -12,15 +12,14 @@ import {
   setFilter,
   toggleMailBox,
 } from "../redux/emailsReducer";
-
-
+import { Helmet } from "react-helmet-async";
 
 function HomePage() {
   const dispatch = useDispatch();
   // const emails = useSelector(selectEmails);
   const showMailBox = useSelector(selectShowMailBox);
   const filter = useSelector(selectEmailFilter);
-  const filteredEmails = useSelector(selectFilteredEmails)
+  const filteredEmails = useSelector(selectFilteredEmails);
 
   const onFilter = (e) => {
     dispatch(setFilter(e.target.value));
@@ -55,6 +54,9 @@ function HomePage() {
 
   return (
     <div>
+      <Helmet>
+        <title>Mailbox</title>
+      </Helmet>
       <MailBoxForm onAddNewMailBox={onAddNewMailBox} />
 
       <button onClick={handleToggleMailBox}>

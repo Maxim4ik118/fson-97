@@ -15,6 +15,7 @@ import { productDetailsReducer } from "./productDetailReducer";
 import { productsReducer } from "./productsReducer";
 import { emailsReducer } from "./emailsReducer";
 import { authReducer } from "./authReducer";
+import { phonebookReducer } from "./phonebookReducer";
 
 const productDetailsConfig = {
   key: "productDetails",
@@ -40,6 +41,7 @@ export const store = configureStore({
     emails: persistReducer(emailsConfig, emailsReducer),
     productsData: productsReducer,
     auth: persistReducer(authConfig, authReducer),
+    phonebook: phonebookReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

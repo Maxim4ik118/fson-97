@@ -3,11 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, Route, Routes, useLocation, useParams } from "react-router-dom";
 import Loader from "../components/Loader/Loader";
 import {
-  apiGetProductDetails, selectProductData, selectProductDetailsIsError, selectProductDetailsIsLoading,
+  apiGetProductDetails,
+  selectProductData,
+  selectProductDetailsIsError,
+  selectProductDetailsIsLoading,
 } from "../redux/productDetailReducer";
 import ReduxCounter from "../components/ReduxCounter/ReduxCounter";
 import ProductInfo from "../components/ProductInfo/ProductInfo";
 import ErrorMessage from "../components/ErrorMessage/ErrorMessage";
+import { Helmet } from "react-helmet-async";
 // import ProductComments from "../components/ProductComments/ProductComments";
 const ProductComments = lazy(() =>
   import("../components/ProductComments/ProductComments")
@@ -62,6 +66,9 @@ const ProductDetailsPage = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>Product Details</title>
+      </Helmet>
       <ReduxCounter />
       {isError && <ErrorMessage />}
       {isLoading && <Loader />}

@@ -1,9 +1,13 @@
 import { NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import clsx from "classnames";
 
 import css from "../../App.module.css";
-import { selectUserData, selectUserIsSignedIn } from "../../redux/authReducer";
+import {
+  apiLogoutUser,
+  selectUserData,
+  selectUserIsSignedIn,
+} from "../../redux/authReducer";
 
 const getNavLinkClassNames = ({ isActive }) =>
   clsx(css.headerLink, {
@@ -11,8 +15,12 @@ const getNavLinkClassNames = ({ isActive }) =>
   });
 
 const Layout = ({ children }) => {
+  const dispatch = useDispatch();
   const isSignedIn = useSelector(selectUserIsSignedIn);
   const userData = useSelector(selectUserData);
+  const onLogOut = () => {
+    dispatch(apiLogoutUser());
+  };
 
   return (
     <div>
@@ -32,7 +40,7 @@ const Layout = ({ children }) => {
               Contacts
             </NavLink>
             <span>Hello, {userData.name}!</span>
-            <button type="button">Logout</button>
+            <button onClick={onLogOut} type="button">Logout</button>
           </>
         ) : (
           <>

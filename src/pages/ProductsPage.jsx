@@ -3,6 +3,7 @@ import ErrorMessage from "../components/ErrorMessage/ErrorMessage";
 import Loader from "../components/Loader/Loader";
 import ProductList from "../components/ProductList/ProductList";
 import { requestProducts } from "../services/api";
+import { Helmet } from "react-helmet-async";
 
 const ProductsPage = () => {
   const [products, setProducts] = useState(null);
@@ -28,6 +29,9 @@ const ProductsPage = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>Products</title>
+      </Helmet>
       <h1>Phone Store</h1>
       {isError && <ErrorMessage />}
       {isLoading && <Loader />}

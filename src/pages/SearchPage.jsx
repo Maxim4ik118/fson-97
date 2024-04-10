@@ -5,7 +5,13 @@ import ProductList from "../components/ProductList/ProductList";
 import SearchForm from "../components/SearchForm/SearchForm";
 import { useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { apiGetProductsByQuery, selectProducts, selectProductsIsError, selectProductsIsLoading } from "../redux/productsReducer";
+import {
+  apiGetProductsByQuery,
+  selectProducts,
+  selectProductsIsError,
+  selectProductsIsLoading,
+} from "../redux/productsReducer";
+import { Helmet } from "react-helmet-async";
 
 const SearchPage = () => {
   const dispatch = useDispatch();
@@ -33,6 +39,9 @@ const SearchPage = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>Search your product</title>
+      </Helmet>
       <h1>Find your product</h1>
       <SearchForm
         searchQuery={searchQuery}

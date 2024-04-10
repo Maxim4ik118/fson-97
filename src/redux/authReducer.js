@@ -1,6 +1,7 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import {
   requestGetCurrentUser,
+  requestLogOut,
   requestSignIn,
   requestSignUp,
   setToken,
@@ -41,9 +42,29 @@ export const apiRefreshUser = createAsyncThunk(
     setToken(token);
     try {
       const data = await requestGetCurrentUser();
-      console.log("data: ", data);
-
       return data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  },
+  {
+    condition: (_, thunkAPI) => {
+      const state = thunkAPI.getState();
+      const token = state.auth.token;
+
+      if(!token) return false;
+      return true;
+    }
+  }
+);
+
+export const apiLogoutUser = createAsyncThunk(
+  "auth/logout",
+  async (_, thunkAPI) => {
+    try {
+      await requestLogOut();
+
+      return;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.message);
     }
@@ -64,25 +85,11 @@ const authSlice = createSlice({
   initialState: INITIAL_STATE,
   extraReducers: (builder) =>
     builder
-     //   REGISTER
-      .addCase(apiRegisterUser.pending, (state) => {
-        state.isLoading = true;
-        state.isError = false;
-      })
       .addCase(apiRegisterUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.userData = action.payload.user;
         state.token = action.payload.token;
         state.isSignedIn = true;
-      })
-      .addCase(apiRegisterUser.rejected, (state) => {
-        state.isLoading = false;
-        state.isError = true;
-      })
-      //   LOGIN
-      .addCase(apiLoginUser.pending, (state) => {
-        state.isLoading = true;
-        state.isError = false;
       })
       .addCase(apiLoginUser.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -90,10 +97,10 @@ const authSlice = createSlice({
         state.token = action.payload.token;
         state.isSignedIn = true;
       })
-      .addCase(apiLoginUser.rejected, (state) => {
-        state.isLoading = false;
-        state.isError = true;
+      .addCase(apiLogoutUser.fulfilled, () => {
+        return INITIAL_STATE;
       })
+
       //   REFRESH
       .addCase(apiRefreshUser.pending, (state) => {
         state.isRefreshing = true;
@@ -107,7 +114,30 @@ const authSlice = createSlice({
       .addCase(apiRefreshUser.rejected, (state) => {
         state.isRefreshing = false;
         state.isError = true;
-      }),
+      })
+
+      .addMatcher(
+        isAnyOf(
+          apiRegisterUser.pending,
+          apiLoginUser.pending,
+          apiLogoutUser.pending
+        ),
+        (state) => {
+          state.isLoading = true;
+          state.isError = false;
+        }
+      )
+      .addMatcher(
+        isAnyOf(
+          apiRegisterUser.rejected,
+          apiLoginUser.rejected,
+          apiLogoutUser.rejected
+        ),
+        (state) => {
+          state.isLoading = false;
+          state.isError = true;
+        }
+      ),
 });
 
 export const selectUserData = (state) => state.auth.userData;

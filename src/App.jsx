@@ -1,6 +1,6 @@
 import { Suspense, lazy, useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { useDispatch } from 'react-redux'
+import { useDispatch } from "react-redux";
 // import WelcomePage from "./pages/WelcomePage";
 // import HomePage from "./pages/HomePage";
 // import ProductsPage from "./pages/ProductsPage";
@@ -18,6 +18,8 @@ import SearchPage from "./pages/SearchPage";
 import Loader from "./components/Loader/Loader";
 import Layout from "./components/Layout/Layout";
 import { apiRefreshUser } from "./redux/authReducer";
+import RestrictedRoute from "./components/RestrictedRoute/RestrictedRoute";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 
 /*
 Робота з маршрутизацією:
@@ -29,26 +31,72 @@ import { apiRefreshUser } from "./redux/authReducer";
 */
 
 function App() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(apiRefreshUser())
-  }, [dispatch])
+    dispatch(apiRefreshUser());
+  }, [dispatch]);
 
   return (
     <Layout>
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<WelcomePage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/contacts" element={<ContactsPage />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/products" element={<ProductsPage />} />
-          <Route path="/search" element={<SearchPage />} />
+          <Route
+            path="/register"
+            element={
+              <RestrictedRoute>
+                <RegisterPage />
+              </RestrictedRoute>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <RestrictedRoute>
+                <LoginPage />
+              </RestrictedRoute>
+            }
+          />
+          <Route
+            path="/contacts"
+            element={
+              <PrivateRoute>
+                <ContactsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/home"
+            element={
+              <PrivateRoute>
+                <HomePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/products"
+            element={
+              <PrivateRoute>
+                <ProductsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/search"
+            element={
+              <PrivateRoute>
+                <SearchPage />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="/products/:productId/*"
-            element={<ProductDetailsPage />}
+            element={
+              <PrivateRoute>
+                <ProductDetailsPage />
+              </PrivateRoute>
+            }
           />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
